@@ -1,6 +1,5 @@
 package fitbot.ldbs.model;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -37,13 +36,13 @@ import fitbot.ldbs.dao.FitBotDao;
 public class Person {
 
 	@Id
-	@SequenceGenerator(name="person_id_seq",
+	@SequenceGenerator(name="person_id_gen",
 	sequenceName="person_id_seq",
 	allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator="person_id_seq")
+	generator="person_id_gen")
 	@Column(name="id", updatable=false)
-	private Long id;
+	private int id;
 
 	@Column(name="firstname")
 	private  String firstname;
@@ -81,7 +80,7 @@ public class Person {
 
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -93,7 +92,7 @@ public class Person {
 		return lastname;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -169,6 +168,19 @@ public class Person {
 		this.goals = goals;
 	}
 	
+    
+    /**
+     * Retrieve a Person from the database by id
+     * @param personId id of the Person
+     * @return The Person if exists, else null
+     */
+    public static Person getPersonById(int personId) {
+        EntityManager em = FitBotDao.instance.createEntityManager();
+        Person p = em.find(Person.class, personId);
+        FitBotDao.instance.closeConnections(em);
+        return p;
+    }
+    
 	public static List<Person> getAll() {
         EntityManager em = FitBotDao.instance.createEntityManager();
         List<Person> list = em.createNamedQuery("Person.findAll", Person.class)
@@ -220,7 +232,7 @@ public class Person {
     	return p;
     }
     
-    public List<Run> getRecentRuns(Date startDate){
+    public List<Run> getRecentRuns(Timestamp startDate){
     	EntityManager em = FitBotDao.instance.createEntityManager();
     	List<Run> rs = em.createNamedQuery("Run.findRecentRuns", Run.class)
     			.setParameter("personId", getId())
@@ -230,11 +242,11 @@ public class Person {
     	return rs;
     }
     
-    public Goal setUserGoal(Goal g){
+    public static  Goal setUserGoal(int personId, Goal g){
     	Goal prev = null;
     	EntityManager em = FitBotDao.instance.createEntityManager();
     	List<Goal> res = em.createNamedQuery("Goal.findByUserAndType", Goal.class)
-    			.setParameter("personId", getId())
+    			.setParameter("personId", personId)
     			.setParameter("goalType", g.getGoalType())
     			.getResultList();
     	if(!res.isEmpty()){

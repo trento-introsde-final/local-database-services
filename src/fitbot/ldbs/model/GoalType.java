@@ -79,7 +79,7 @@ public class GoalType {
      * @param personId id of the Person
      * @return The Person if exists, else null
      */
-    public static GoalType getGoalTypeById(int id) {
+    public static GoalType getGoalTypeById(String id) {
         EntityManager em = FitBotDao.instance.createEntityManager();
         GoalType gt = em.find(GoalType.class, id);
         FitBotDao.instance.closeConnections(em);

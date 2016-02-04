@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import fitbot.ldbs.dao.FitBotDao;
 
 @Entity
 @Table(name="Run_History")
@@ -144,5 +148,19 @@ public class Run {
 		this.steps = steps;
 	}
 	
+    /**
+     * Save a new Run to the database
+     * @param r Run to be saved
+     * @return Returns a copy of the Run object, with id set
+     */
+    public static Run saveRun(Run r) {
+        EntityManager em = FitBotDao.instance.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(r);
+        tx.commit();
+        FitBotDao.instance.closeConnections(em);
+        return r;
+    } 
 	
 }
