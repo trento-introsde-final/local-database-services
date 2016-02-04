@@ -39,9 +39,7 @@ public class Goal {
 	@JoinColumn(name="goal_period",referencedColumnName="days_length")
 	private GoalPeriod goalPeriod; //TODO: foreign key
 	
-	@ManyToOne
-	@JoinColumn(name="person_id")
-	private Person person;
+	
 	
 	public Goal(){
 		
@@ -87,13 +85,5 @@ public class Goal {
 		this.goalPeriod = goalPeriod;
 	}
 
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-	
 	
 }

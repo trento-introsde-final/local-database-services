@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -46,17 +44,6 @@ public class Run {
 	@Column(name="avg_speed")
 	private Float avgSpeed;
 	
-	@ManyToOne
-	@JoinColumn(name="person_id")
-	private Person person;
-	
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
 
 	public Run(){
 		
