@@ -2,13 +2,16 @@ package fitbot.ldbs.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -55,6 +58,12 @@ public class Person {
 
 	@Column(name="slack_user_id")
 	private String slack_user_id;
+	
+	@OneToMany(mappedBy="person")
+	private List<Run> runs;
+	
+	@OneToMany(mappedBy="person")
+	private List<Goal> goals;
 
 	public Person(){
 
@@ -107,6 +116,14 @@ public class Person {
 	public String getSlack_user_id() {
 		return slack_user_id;
 	}
+	
+	public List<Run> getRuns() {
+		return runs;
+	}
+
+	public List<Goal> getGoals() {
+		return goals;
+	}
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -130,6 +147,14 @@ public class Person {
 
 	public void setSlack_user_id(String slack_user_id) {
 		this.slack_user_id = slack_user_id;
+	}
+	
+	public void setRuns(List<Run> runs) {
+		this.runs = runs;
+	}
+
+	public void setGoals(List<Goal> goals) {
+		this.goals = goals;
 	}
 	
 	public static List<Person> getAll() {
