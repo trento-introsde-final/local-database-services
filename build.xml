@@ -15,7 +15,7 @@
        # The target "download-ivy" and "install-ivy" will download the ivy jar and place it in the "ivy" folder
        # 
 -->
-    <project name="sdelab06" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+    <project name="local-database-services" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
         <!-- PART 1: Ivy properties, download, installation and configuration -->
         <property name="ivy.install.version" value="2.4.0-rc1" />
         <property name="ivy.jar.dir" value="${basedir}/ivy" />
@@ -47,6 +47,7 @@
             </path>
             <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
         </target>
+        
         <!-- PART 2: General properties definitions -->
         <property name="build.dir" value="build" />
         <property name="src.dir" value="src" />
@@ -103,9 +104,9 @@
                 </fileset>
             </copy>
         </target>
-        <target name="run">
-            <echo message="app start App in ${build.dir}" />
-            <java classname="App" classpath="${build.dir}" fork="true">
+        <target name="run" depends="install">
+            <echo message="app start fitbot.ldbs.App in ${build.dir}" />
+            <java classname="fitbot.ldbs.App" classpath="${build.dir}" fork="true">
                 <arg value="$JAVA_OPTS  -cp" />
                 <classpath>
                     <path location="build" />
