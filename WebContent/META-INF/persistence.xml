@@ -4,7 +4,10 @@
 	<persistence-unit name="fitbot-db">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fitbot.ldbs.model.Person</class>
-
+	<class>fitbot.ldbs.model.Run</class>
+	<class>fitbot.ldbs.model.Goal</class>
+	<class>fitbot.ldbs.model.GoalType</class>
+	<class>fitbot.ldbs.model.GoalPeriod</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/fitbot" />
