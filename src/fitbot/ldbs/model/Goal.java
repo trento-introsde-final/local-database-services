@@ -1,6 +1,6 @@
 package fitbot.ldbs.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ public class Goal {
 	private Float targetValue;
 	
 	@Column(name="creation_date") //TODO: Date type jpa?
-	private Date creationDate;
+	private Timestamp creationDate;
 	
 	@ManyToOne
 	@JoinColumn(name="goal_measure_type",referencedColumnName="id")
@@ -52,7 +52,7 @@ public class Goal {
 		return targetValue;
 	}
 
-	public Date getCreationDate() {
+	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 
@@ -72,7 +72,7 @@ public class Goal {
 		this.targetValue = targetValue;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
 

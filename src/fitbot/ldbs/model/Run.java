@@ -1,17 +1,25 @@
 package fitbot.ldbs.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="Run_History")
+@NamedQueries(value={
+		@NamedQuery(name="Run.findRecentRuns", 
+					query="SELECT r FROM Run r "
+						 +"WHERE r.startdate<=:startDate "
+						 +"AND r.personId=:personId"),
+})
 public class Run {
 
 	@Id
@@ -30,7 +38,7 @@ public class Run {
 	private Float calories;
 	
 	@Column(name="startdate")
-	private Date startdate;
+	private Timestamp startdate;
 	
 	@Column(name="moving_time")
 	private Float movingTime;
@@ -44,6 +52,11 @@ public class Run {
 	@Column(name="avg_speed")
 	private Float avgSpeed;
 	
+	@Column(name="person_id")
+	private int personId;
+	
+	@Column(name="steps")
+	private int steps;
 
 	public Run(){
 		
@@ -62,7 +75,7 @@ public class Run {
 		return calories;
 	}
 
-	public Date getStartdate() {
+	public Timestamp getStartdate() {
 		return startdate;
 	}
 
@@ -82,6 +95,10 @@ public class Run {
 		return avgSpeed;
 	}
 
+	public int getSteps() {
+		return steps;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -95,7 +112,7 @@ public class Run {
 		this.calories = calories;
 	}
 
-	public void setStartdate(Date startdate) {
+	public void setStartdate(Timestamp startdate) {
 		this.startdate = startdate;
 	}
 
@@ -113,6 +130,18 @@ public class Run {
 
 	public void setAvgSpeed(Float avgSpeed) {
 		this.avgSpeed = avgSpeed;
+	}
+
+	public int getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(int personId) {
+		this.personId = personId;
+	}
+
+	public void setSteps(int steps) {
+		this.steps = steps;
 	}
 	
 	

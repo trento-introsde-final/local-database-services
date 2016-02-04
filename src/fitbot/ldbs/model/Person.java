@@ -1,5 +1,8 @@
 package fitbot.ldbs.model;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -206,19 +209,52 @@ public class Person {
     
     public static Person getPersonBySlackUserId(String slackUserId){
     	EntityManager em = FitBotDao.instance.createEntityManager();
-    	Person p = em.createNamedQuery("Person.findBySlackId", Person.class)
+    	List<Person> ps = em.createNamedQuery("Person.findBySlackId", Person.class)
     			.setParameter("slack_user_id", slackUserId)
-    			.getSingleResult();
+    			.getResultList();
+    	Person p = null;
+    	if(!ps.isEmpty()){
+    		p = ps.get(0);
+    	}
     	FitBotDao.instance.closeConnections(em);
     	return p;
     }
     
-    public static List<Goal> getRecentRuns(Date startDate){
+    public List<Run> getRecentRuns(Date startDate){
     	EntityManager em = FitBotDao.instance.createEntityManager();
     	List<Run> rs = em.createNamedQuery("Run.findRecentRuns", Run.class)
-    			.setParameter("personId", )
+    			.setParameter("personId", getId())
+    			.setParameter("startDate", startDate)
+    			.getResultList();
     	FitBotDao.instance.closeConnections(em);
     	return rs;
+    }
+    
+    public Goal setUserGoal(Goal g){
+    	Goal prev = null;
+    	EntityManager em = FitBotDao.instance.createEntityManager();
+    	List<Goal> res = em.createNamedQuery("Goal.findByUserAndType", Goal.class)
+    			.setParameter("personId", getId())
+    			.setParameter("goalType", g.getGoalType())
+    			.getResultList();
+    	if(!res.isEmpty()){
+    		//copy new values into old
+    		Calendar calendar = Calendar.getInstance();
+    		calendar.setTime(new java.util.Date());
+    		prev = res.get(0);
+    		prev.setCreationDate(new Timestamp(calendar.getTimeInMillis()));
+    		prev.setGoalPeriod(g.getGoalPeriod());
+    		prev.setTargetValue(g.getTargetValue());    
+    	} else {
+    		//create new object
+    		prev = g;
+    	}
+    	EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        prev = em.merge(prev);
+        tx.commit();
+    	FitBotDao.instance.closeConnections(em);
+    	return prev;
     }
 
 }
