@@ -19,7 +19,7 @@ public enum FitBotDao {
 	    if (emf!=null) {
 	        emf.close();
 	    }
-	    
+	    System.out.println("Echo cho ho o  ...");
 	    Map<String, Object> configOverrides = new HashMap<String, Object>();
 	    String dbURL = System.getenv("DATABASE_URL");
 	    try {
