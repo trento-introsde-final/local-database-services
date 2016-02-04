@@ -59,10 +59,10 @@ public class Person {
 	@Column(name="slack_user_id")
 	private String slack_user_id;
 	
-	@OneToMany(mappedBy="person")
+	@OneToMany(mappedBy="person",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<Run> runs;
 	
-	@OneToMany(mappedBy="person")
+	@OneToMany(mappedBy="person",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<Goal> goals;
 
 	public Person(){
