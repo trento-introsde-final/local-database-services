@@ -68,10 +68,7 @@ public class PersonResource {
         if (existing == null) {
             res = Response.noContent().build();
         } else {
-            person.setId(this.id);
-            person.setHealthProfile(existing.getHealthProfile());
-            person = Person.updatePerson(person);
-            res = Response.ok(person).contentLocation(uriInfo.getAbsolutePath()).build();
+          res = null;
         }
         return res;
     }
@@ -86,14 +83,15 @@ public class PersonResource {
         if (c == null)
             throw new NotFoundException("Delete: Person with " + id
                     + " not found");
-        Person.removePerson(c);
+    //    Person.removePerson(c);
     }
 
     //Auxiliary method
     private Person getPersonById(int personId) {
-        Person person = Person.getPersonById(personId);
+       /* Person person = Person.getPersonById(personId);
         if(person != null)
         	System.out.println("Person: "+person.toString());
-        return person;
+        return person;*/
+    	return null;
     }
 }
