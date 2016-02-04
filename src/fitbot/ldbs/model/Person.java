@@ -6,11 +6,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -24,7 +26,11 @@ import fitbot.ldbs.dao.FitBotDao;
  */
 @Entity
 @Table(name="Person")
-@NamedQuery(name="Person.findAll", query="SELECT p FROM Person p")
+@NamedQueries(value={
+		@NamedQuery(name="Person.findAll", query="SELECT p FROM Person p"),
+
+		@NamedQuery(name="Person.findBySlackId", query="SELECT p FROM Person p WHERE p.slack_user_id=:slack_user_id")
+})
 public class Person {
 
 	@Id
@@ -166,6 +172,53 @@ public class Person {
             .getResultList();
         FitBotDao.instance.closeConnections(em);
         return list;
+    }
+	
+    /**
+     * Save a new Person to the database
+     * @param p Person to be saved
+     * @return Returns a copy of the Person object, with id set
+     */
+    public static Person savePerson(Person p) {
+        EntityManager em = FitBotDao.instance.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(p);
+        tx.commit();
+        FitBotDao.instance.closeConnections(em);
+        return p;
+    } 
+    
+    /**
+     * Save an existing Person to the database
+     * @param p Person to be saved
+     * @return Return a copy of the Person object
+     */
+    public static Person updatePerson(Person p) {
+        EntityManager em = FitBotDao.instance.createEntityManager(); 
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        p=em.merge(p);
+        tx.commit();
+        FitBotDao.instance.closeConnections(em);
+        return p;
+    }
+    
+    public static Person getPersonBySlackUserId(String slackUserId){
+    	EntityManager em = FitBotDao.instance.createEntityManager();
+    	Person p = em.createNamedQuery("Person.findBySlackId", Person.class)
+    			.setParameter("slack_user_id", slackUserId)
+    			.getSingleResult();
+    	FitBotDao.instance.closeConnections(em);
+    	return p;
+    }
+    
+    public static List<Goal> getRecentRuns(Date startDate){
+    	EntityManager em = FitBotDao.instance.createEntityManager();
+    	List<Run> rs = em.createNamedQuery("Run.findRecentRuns", Run.class)
+    			.setParameter("personId", )
+    	FitBotDao.instance.closeConnections(em);
+    	return rs;
     }
 
 }

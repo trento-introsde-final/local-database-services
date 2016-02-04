@@ -38,8 +38,7 @@ public class Goal {
 	@ManyToOne
 	@JoinColumn(name="goal_period",referencedColumnName="days_length")
 	private GoalPeriod goalPeriod; //TODO: foreign key
-	
-	
+
 	
 	public Goal(){
 		

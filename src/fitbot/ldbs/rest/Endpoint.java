@@ -1,6 +1,5 @@
 package fitbot.ldbs.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
