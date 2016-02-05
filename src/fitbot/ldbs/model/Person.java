@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 
 import fitbot.ldbs.dao.FitBotDao;
 
@@ -245,22 +246,23 @@ public class Person {
     public static  Goal setUserGoal(int personId, Goal g){
     	Goal prev = null;
     	EntityManager em = FitBotDao.instance.createEntityManager();
-    	List<Goal> res = em.createNamedQuery("Goal.findByUserAndType", Goal.class)
+    	TypedQuery<Goal> q = em.createNamedQuery("Goal.findByUserAndType", Goal.class)
     			.setParameter("personId", personId)
-    			.setParameter("goalType", g.getGoalType())
-    			.getResultList();
+    			.setParameter("goalType", g.getGoalType().getId());    			
+    	List<Goal> res =q.getResultList();
     	if(!res.isEmpty()){
     		//copy new values into old
-    		Calendar calendar = Calendar.getInstance();
-    		calendar.setTime(new java.util.Date());
     		prev = res.get(0);
-    		prev.setCreationDate(new Timestamp(calendar.getTimeInMillis()));
     		prev.setGoalPeriod(g.getGoalPeriod());
     		prev.setTargetValue(g.getTargetValue());    
     	} else {
     		//create new object
     		prev = g;
     	}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new java.util.Date());
+		prev.setCreationDate(new Timestamp(calendar.getTimeInMillis()));
+		prev.setPersonId(personId);
     	EntityTransaction tx = em.getTransaction();
         tx.begin();
         prev = em.merge(prev);

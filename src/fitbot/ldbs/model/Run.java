@@ -21,7 +21,7 @@ import fitbot.ldbs.dao.FitBotDao;
 @NamedQueries(value={
 		@NamedQuery(name="Run.findRecentRuns", 
 					query="SELECT r FROM Run r "
-						 +"WHERE r.startdate<=:startDate "
+						 +"WHERE r.startdate>=:startDate "
 						 +"AND r.personId=:personId"),
 })
 public class Run {

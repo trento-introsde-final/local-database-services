@@ -42,14 +42,9 @@ public class Dispatcher {
 	        return new GoalResource(uriInfo, request);
 	    }
 	    
-	    @Path("user")
-	    public UserResource routeUser() {
-	        return new UserResource(uriInfo, request);
-	    }
-	    
 	    @Path("users")
-	    public UserCollectionResource routeUserCollection() {
-	        return new UserCollectionResource(uriInfo, request);
+	    public UsersResource routeUserCollection() {
+	        return new UsersResource(uriInfo, request);
 	    }
 	    
 	    @Path("user-id")

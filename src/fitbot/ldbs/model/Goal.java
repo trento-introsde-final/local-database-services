@@ -9,11 +9,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="Goal")
+@NamedQueries(value = {
+	@NamedQuery(name="Goal.findByUserAndType",
+				query="SELECT g FROM Goal g WHERE g.personId=:personId AND g.goalType.id=:goalType")
+}
+)
 public class Goal {
 
 	@Id
@@ -39,6 +46,8 @@ public class Goal {
 	@JoinColumn(name="goal_period",referencedColumnName="days_length")
 	private GoalPeriod goalPeriod; //TODO: foreign key
 
+	@Column(name="person_id")
+	private int personId;
 	
 	public Goal(){
 		
@@ -64,6 +73,10 @@ public class Goal {
 		return goalPeriod;
 	}
 
+	public int getPersonId() {
+		return personId;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -82,6 +95,10 @@ public class Goal {
 
 	public void setGoalPeriod(GoalPeriod goalPeriod) {
 		this.goalPeriod = goalPeriod;
+	}
+
+	public void setPersonId(int personId) {
+		this.personId = personId;
 	}
 
 	
