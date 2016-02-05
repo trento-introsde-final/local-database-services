@@ -2,7 +2,6 @@ package fitbot.ldbs.rest;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import fitbot.ldbs.model.GoalType;
 import fitbot.ldbs.model.Person;
 import fitbot.ldbs.model.Run;
 import fitbot.ldbs.rest.input.InputGoal;
+import fitbot.ldbs.rest.input.InputRun;
 import fitbot.ldbs.rest.output.BasicResponse;
 import fitbot.ldbs.rest.output.GoalsResponse;
 import fitbot.ldbs.rest.output.RunsResponse;
@@ -166,15 +166,33 @@ public class UsersResource {
     @POST
     @Path("{userId}/runs")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response registerRun(@PathParam("userId") int userId, Run nRun) {
+    public Response registerRun(@PathParam("userId") int userId, InputRun iRun) {
     	Response res;
+    	BasicResponse bResp = new BasicResponse();
+    	
+    	//Validate user exists
     	Person p = Person.getPersonById(userId);
+    	if(p == null){
+    		bResp.setMessage("Incorrect user id.");
+    		return Response.status(404).entity(bResp).build();
+    	}
+    	
+    	//Validate run parameters
+    	if(iRun.getStart_date() == null){
+    		bResp.setMessage("Must provide a start_date for the run.");
+    		return Response.status(404).entity(bResp).build();
+    	}
+    	    	
+    	//convert into model
+    	Run nRun = iRun.toRun();
     	nRun.setPersonId(p.getId());
     	URI location = null;
-    	Run.saveRun(nRun);
     	try {
+        	Run.saveRun(nRun);
     		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+nRun.getId());
-    	} catch (URISyntaxException e){
+    	} catch (Exception e){
+    		bResp.setMessage(e.getMessage());
+    		return Response.status(404).entity(bResp).build();
     	}
     	res = Response.created(location).entity(nRun).build();
 		return res;

@@ -37,7 +37,7 @@ public class SlackUserResource {
     	Person person = Person.getPersonBySlackUserId(slackUserId);
     	SlackIdResponse respObj = new SlackIdResponse();
     	if(person == null){
-    		respObj.setMessage("Invalid user slack id");
+    		respObj.setMessage("Unknown slack user id");
     		res = Response.status(404).entity(respObj).build();
     		return res;
     	}
