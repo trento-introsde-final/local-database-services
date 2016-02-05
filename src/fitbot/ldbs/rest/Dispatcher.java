@@ -30,6 +30,10 @@ public class Dispatcher {
 	    @PersistenceContext(unitName = "fitbot-db",type=PersistenceContextType.TRANSACTION)
 	    private EntityManagerFactory entityManagerFactory;
 
+	    /**
+	     * Very important to say hello before requesting anything. Also to wake heroku up
+	     * @return 'Hola'
+	     */
 	    @GET
 	    @Path("hola")
 	    @Produces(MediaType.TEXT_PLAIN)
