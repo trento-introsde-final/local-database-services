@@ -35,16 +35,16 @@ public class Goal {
 	@Column(name="target_value")
 	private Float targetValue;
 	
-	@Column(name="creation_date") //TODO: Date type jpa?
+	@Column(name="creation_date")
 	private Timestamp creationDate;
 	
 	@ManyToOne
 	@JoinColumn(name="goal_measure_type",referencedColumnName="id")
-	private GoalType goalType;//TODO: foreign key jpa?
+	private GoalType goalType;
 	
 	@ManyToOne
 	@JoinColumn(name="goal_period",referencedColumnName="days_length")
-	private GoalPeriod goalPeriod; //TODO: foreign key
+	private GoalPeriod goalPeriod;
 
 	@Column(name="person_id")
 	private int personId;
