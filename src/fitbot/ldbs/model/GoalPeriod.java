@@ -2,8 +2,11 @@ package fitbot.ldbs.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import fitbot.ldbs.dao.FitBotDao;
 
 @Entity
 @Table(name="Goal_Period")
@@ -36,5 +39,15 @@ public class GoalPeriod {
 		this.name = name;
 	}
 	
-	
+    /**
+     * Retrieve a GoalPeriod from the database 
+     * @param personId id of the Person
+     * @return The Person if exists, else null
+     */
+    public static GoalPeriod getGoalPeriodByName(String name) {
+        EntityManager em = FitBotDao.instance.createEntityManager();
+        GoalPeriod gp = em.find(GoalPeriod.class, name);
+        FitBotDao.instance.closeConnections(em);
+        return gp;
+    }
 }

@@ -45,7 +45,7 @@ public class Run {
 	private Timestamp startdate;
 	
 	@Column(name="moving_time")
-	private Float movingTime;
+	private int movingTime;
 	
 	@Column(name="elevation_gain")
 	private Float elevationGain;
@@ -83,7 +83,7 @@ public class Run {
 		return startdate;
 	}
 
-	public Float getMovingTime() {
+	public int getMovingTime() {
 		return movingTime;
 	}
 
@@ -120,7 +120,7 @@ public class Run {
 		this.startdate = startdate;
 	}
 
-	public void setMovingTime(Float movingTime) {
+	public void setMovingTime(int movingTime) {
 		this.movingTime = movingTime;
 	}
 
