@@ -70,13 +70,13 @@ public class UsersResource {
     	}
     	try {
     		p = Person.savePerson(p);
-    		location = new URI(uriInfo.getAbsolutePath().toString()+p.getId());
+    		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+p.getId());
     	} catch (Exception e){
         	bResp = new BasicResponse(e.getMessage());
     		res = Response.serverError().entity(bResp).build();
     		return res;
     	}
-    	res = Response.created(location).entity(p).build();
+    	res = Response.created(location).build();
 		return res;
     }
 
