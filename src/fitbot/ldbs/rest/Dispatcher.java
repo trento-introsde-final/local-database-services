@@ -2,11 +2,6 @@ package fitbot.ldbs.rest;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.PersistenceUnit;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,16 +14,10 @@ import javax.ws.rs.core.UriInfo;
 @LocalBean
 @Path("/")
 public class Dispatcher {
-	 @Context
+		@Context
 	    UriInfo uriInfo;
 	    @Context
 	    Request request;
-
-	    @PersistenceUnit(unitName="fitbot-db")
-	    EntityManager entityManager;
-
-	    @PersistenceContext(unitName = "fitbot-db",type=PersistenceContextType.TRANSACTION)
-	    private EntityManagerFactory entityManagerFactory;
 
 	    /**
 	     * Very important to say hello before requesting anything. Also to wake heroku up
