@@ -5,11 +5,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import fitbot.ldbs.dao.FitBotDao;
@@ -20,11 +17,6 @@ import fitbot.ldbs.dao.FitBotDao;
 public class GoalType {
 
 	@Id
-	@SequenceGenerator(name="goal_measure_type_id_seq",
-	sequenceName="goal_measure_type_id_seq",
-	allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator="goal_measure_type_id_seq")
 	@Column(name="id", updatable=false)
 	private String id;
 	

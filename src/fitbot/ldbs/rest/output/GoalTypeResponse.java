@@ -1,11 +1,17 @@
 package fitbot.ldbs.rest.output;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class GoalTypeResponse extends BasicResponse {
 
+	@JsonInclude(Include.NON_NULL)
 	private String id;
-	
+
+	@JsonInclude(Include.NON_NULL)
 	private String name;
 	
+	@JsonInclude(Include.NON_NULL)
 	private String units;
 	
 	public GoalTypeResponse(){

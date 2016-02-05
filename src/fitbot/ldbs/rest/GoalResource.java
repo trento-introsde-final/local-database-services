@@ -1,6 +1,5 @@
 package fitbot.ldbs.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -12,9 +11,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import fitbot.ldbs.model.GoalType;
+import fitbot.ldbs.rest.output.GoalTypeResponse;
+import fitbot.ldbs.rest.output.GoalTypesResponse;
 
 @Stateless
 @LocalBean
@@ -32,21 +34,31 @@ public class GoalResource {
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public List<String> getGoalTypes(){
+    public Response getGoalTypes(){
     	List<GoalType> gts = GoalType.getAll();
-    	List<String> types = new ArrayList<String>();
-    	for(GoalType gt: gts){
-    		types.add(gt.getId());
-    	}
-    	return types;
+    	GoalTypesResponse gtResp = new GoalTypesResponse();
+    	gtResp.setResults(gts);
+    	Response res = Response.ok(gtResp).build();
+    	return res;
     }
     
     @GET
     @Path("{goalType}")
     @Produces({MediaType.APPLICATION_JSON})
-    public GoalType getGoalType(@PathParam("goalType") String goalType) {
+    public Response getGoalType(@PathParam("goalType") String goalType) {
     	GoalType gt = GoalType.getGoalTypeById(goalType);
-        return gt;
+    	GoalTypeResponse gtResp = new GoalTypeResponse();
+    	Response res;
+    	if(gt == null){
+    		gtResp.setMessage("Invalid goal type name.");
+    		res = Response.status(404).entity(gtResp).build();
+    		return res;
+    	}
+    	gtResp.setName(gt.getName());
+    	gtResp.setId(gt.getId());
+    	gtResp.setUnits(gt.getUnits());
+    	res = Response.ok(gtResp).build();
+        return res;
     }
 
 }

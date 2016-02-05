@@ -27,6 +27,10 @@ import fitbot.ldbs.model.Goal;
 import fitbot.ldbs.model.GoalType;
 import fitbot.ldbs.model.Person;
 import fitbot.ldbs.model.Run;
+import fitbot.ldbs.rest.input.InputGoal;
+import fitbot.ldbs.rest.output.BasicResponse;
+import fitbot.ldbs.rest.output.GoalsResponse;
+import fitbot.ldbs.rest.output.RunsResponse;
 
 
 @Stateless
@@ -56,11 +60,14 @@ public class UsersResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response newPerson(Person person) throws IOException {
     	Response res;
-    	person = Person.savePerson(person);
     	URI location = null;
     	try {
+    		person = Person.savePerson(person);
     		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+person.getId());
-    	} catch (URISyntaxException e){
+    	} catch (Exception e){
+        	BasicResponse bResp = new BasicResponse("Could not create person");
+    		res = Response.serverError().entity(bResp).build();
+    		return res;
     	}
     	res = Response.created(location).entity(person).build();
 		return res;
@@ -72,34 +79,88 @@ public class UsersResource {
     @Path("{userId}/goals/{goalType}")
     public Response setPersonalGoal(
     		@PathParam("userId") int userId, 
-    		@PathParam("goalType") String goalType, Goal g){
-    	Response res;
-    	GoalType gType = GoalType.getGoalTypeById(goalType);//TODO: Check not null
-    	g.setGoalType(gType);
-    	Person.setUserGoal(userId, g);
-    	res = Response.ok().build();
-    	return res;
+    		@PathParam("goalType") String goalType, InputGoal iGoal){
+    	BasicResponse bResp = new BasicResponse();
+    	
+    	//Fetch user and goal objects
+    	Person p = Person.getPersonById(userId);
+    	GoalType gType = GoalType.getGoalTypeById(goalType);
+    	
+    	//Do they exist?
+    	if(p == null || gType == null){
+    		String error = "";
+    		if(p == null){
+    			error += "Incorrect user id. ";
+    		}
+    		if(gType == null){
+    			error += "Incorrect goal type.";
+    		}
+    		bResp.setMessage(error);
+    		return Response.status(404).entity(bResp).build();
+    	}
+    	
+    	try {
+        	//Save goal
+    		Goal g = iGoal.toGoal();
+        	g.setGoalType(gType);
+    		p.setUserGoal(g);
+    	} catch (Exception e){
+    		bResp.setMessage(e.getMessage());
+    		return Response.status(500).entity(bResp).build();
+    	}
+    	return Response.ok(bResp).build();
     }
 
     @GET
     @Path("{userId}/goals")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Goal> getPersonalGoals(@PathParam("userId") int userId) {
+    public Response getPersonalGoals(@PathParam("userId") int userId) {
+    	Response res;
+    	GoalsResponse gResp = new GoalsResponse();
     	Person p = Person.getPersonById(userId);
+    	if(p == null){
+    		gResp.setMessage("Incorrect user id.");
+    		res = Response.status(404).entity(gResp).build();
+    		return res;
+    	}
         List<Goal> goals = p.getGoals();
-        return goals;
+        gResp.setGoals(goals);
+        res = Response.ok(gResp).build();
+        return res;
     }
 
     @GET
     @Path("{userId}/runs")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Run> getRecentRuns(
+    public Response getRecentRuns(
     		@PathParam("userId") int userId, 
     		@DefaultValue("0") @QueryParam("start_date") long startDate) {
+    	Response res;
+    	RunsResponse rResp = new RunsResponse();
+    	
+    	//get Person
     	Person p = Person.getPersonById(userId);
     	Timestamp t = new Timestamp(startDate);
-        List<Run> runs = p.getRecentRuns(t);
-        return runs;
+        
+    	//person doesn't exist
+    	if(p==null){
+    		rResp.setMessage("Incorrect user id.");
+    		return Response.status(404).entity(rResp).build();
+    	}
+    	
+    	//try catch in case jpa throws some error
+    	List<Run> runs = null;
+    	try {
+    		runs = p.getRecentRuns(t);
+    	} catch(Exception e){
+    		rResp.setMessage(e.getMessage());
+    		return Response.status(404).entity(rResp).build();
+    	}
+   
+    	rResp.setRuns(runs); //converts to output format
+    	res = Response.ok(rResp).build(); //return 200 OK + runs object
+    	
+        return res;
     }
     
     @POST

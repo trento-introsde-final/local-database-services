@@ -1,18 +1,22 @@
 package fitbot.ldbs.rest.output;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class SlackIdResponse extends BasicResponse{
 
-	private String id;
+	@JsonInclude(Include.NON_NULL)
+	private Integer id;
 	
 	public SlackIdResponse(){
 		super();
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 }

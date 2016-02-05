@@ -1,9 +1,13 @@
 package fitbot.ldbs.rest.output;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class BasicResponse {
 
 	private String status;
 	
+	@JsonInclude(Include.NON_NULL)
 	private String message = null;
 	
 	public BasicResponse(){
@@ -28,6 +32,7 @@ public class BasicResponse {
 	}
 
 	public void setMessage(String message) {
+		this.status = "ERROR";
 		this.message = message;
 	}
 

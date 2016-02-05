@@ -2,6 +2,7 @@ package fitbot.ldbs.rest.input;
 
 import fitbot.ldbs.model.Goal;
 import fitbot.ldbs.model.GoalPeriod;
+import fitbot.ldbs.rest.exceptions.InputFormatException;
 
 public class InputGoal {
 
@@ -29,10 +30,13 @@ public class InputGoal {
 		this.period = period;
 	}
 	
-	public Goal toGoal(){
+	public Goal toGoal() throws InputFormatException{
 		Goal g = new Goal();
 		g.setTargetValue(target);
 		GoalPeriod gp = GoalPeriod.getGoalPeriodByName(period);
+		if(gp == null){
+			throw new InputFormatException("Unrecognized goal period.");
+		}
 		g.setGoalPeriod(gp);
 		return g;
 	}

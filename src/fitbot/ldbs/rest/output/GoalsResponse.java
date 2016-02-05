@@ -3,10 +3,14 @@ package fitbot.ldbs.rest.output;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import fitbot.ldbs.model.Goal;
 
 public class GoalsResponse extends BasicResponse{
 
+	@JsonInclude(Include.NON_NULL)
 	private List<GoalResponseObject> goals;
 	
 	public GoalsResponse(){

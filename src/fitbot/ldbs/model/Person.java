@@ -243,13 +243,13 @@ public class Person {
     	return rs;
     }
     
-    public static  Goal setUserGoal(int personId, Goal g){
+    public Goal setUserGoal(Goal g){
     	Goal prev = null;
     	EntityManager em = FitBotDao.instance.createEntityManager();
     	TypedQuery<Goal> q = em.createNamedQuery("Goal.findByUserAndType", Goal.class)
-    			.setParameter("personId", personId)
+    			.setParameter("personId", getId())
     			.setParameter("goalType", g.getGoalType().getId());    			
-    	List<Goal> res =q.getResultList();
+    	List<Goal> res = q.getResultList();
     	if(!res.isEmpty()){
     		//copy new values into old
     		prev = res.get(0);
@@ -258,11 +258,11 @@ public class Person {
     	} else {
     		//create new object
     		prev = g;
+    		prev.setPersonId(getId());
     	}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new java.util.Date());
 		prev.setCreationDate(new Timestamp(calendar.getTimeInMillis()));
-		prev.setPersonId(personId);
     	EntityTransaction tx = em.getTransaction();
         tx.begin();
         prev = em.merge(prev);

@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import fitbot.ldbs.model.Person;
+import fitbot.ldbs.rest.output.SlackIdResponse;
 
 @Stateless
 @LocalBean
@@ -34,7 +35,14 @@ public class SlackUserResource {
     public Response getUserBySlackId(@PathParam("slackUserId") String slackUserId){
     	Response res;
     	Person person = Person.getPersonBySlackUserId(slackUserId);
-    	res = Response.ok(person).build();
+    	SlackIdResponse respObj = new SlackIdResponse();
+    	if(person == null){
+    		respObj.setMessage("Invalid user slack id");
+    		res = Response.status(404).entity(respObj).build();
+    		return res;
+    	}
+    	respObj.setId(person.getId());
+    	res = Response.ok(respObj).build();
     	return res;
     }
   
