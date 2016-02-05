@@ -28,6 +28,7 @@ import fitbot.ldbs.model.Person;
 import fitbot.ldbs.model.Run;
 import fitbot.ldbs.rest.input.InputGoal;
 import fitbot.ldbs.rest.input.InputRun;
+import fitbot.ldbs.rest.input.InputUser;
 import fitbot.ldbs.rest.output.BasicResponse;
 import fitbot.ldbs.rest.output.GoalsResponse;
 import fitbot.ldbs.rest.output.RunsResponse;
@@ -58,21 +59,51 @@ public class UsersResource {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response newPerson(Person person) throws IOException {
+    public Response newPerson(InputUser user) {
     	Response res;
+    	BasicResponse bResp = new BasicResponse();
     	URI location = null;
+    	Person p = user.toPerson();
+    	if(p.getSlack_user_id() == null){
+    		bResp.setMessage("Must provide at least slack_user_id");
+    		return Response.status(400).entity(bResp).build();
+    	}
     	try {
-    		person = Person.savePerson(person);
-    		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+person.getId());
+    		p = Person.savePerson(p);
+    		location = new URI(uriInfo.getAbsolutePath().toString()+p.getId());
     	} catch (Exception e){
-        	BasicResponse bResp = new BasicResponse("Could not create person");
+        	bResp = new BasicResponse(e.getMessage());
     		res = Response.serverError().entity(bResp).build();
     		return res;
     	}
-    	res = Response.created(location).entity(person).build();
+    	res = Response.created(location).entity(p).build();
 		return res;
     }
 
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("{userId}")
+    public Response updatePerson(@PathParam("userId") int userId, InputUser user){
+    	Response res;
+    	BasicResponse bResp = new BasicResponse();
+    	Person p = Person.getPersonById(userId);
+    	if(p == null){
+    		bResp.setMessage("Unknown user id.");
+    		return Response.status(404).entity(bResp).build();
+    	}
+    	Person newPerson = user.toPerson();
+    	newPerson.setId(p.getId());
+    	try{
+    		Person.updatePerson(newPerson);
+    	} catch (Exception e){
+    		bResp.setMessage("Error saving user. "+e.getMessage());
+    		return Response.status(500).entity(bResp).build();
+    	}
+    	res = Response.ok(bResp).build();
+    	return res;
+    }
+    
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -180,7 +211,7 @@ public class UsersResource {
     	//Validate run parameters
     	if(iRun.getStart_date() == null){
     		bResp.setMessage("Must provide a start_date for the run.");
-    		return Response.status(404).entity(bResp).build();
+    		return Response.status(400).entity(bResp).build();
     	}
     	    	
     	//convert into model
@@ -189,7 +220,7 @@ public class UsersResource {
     	URI location = null;
     	try {
         	Run.saveRun(nRun);
-    		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+nRun.getId());
+    		location = new URI(uriInfo.getAbsolutePath().toString()+nRun.getId());
     	} catch (Exception e){
     		bResp.setMessage(e.getMessage());
     		return Response.status(404).entity(bResp).build();
