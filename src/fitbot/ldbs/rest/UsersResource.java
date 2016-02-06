@@ -220,7 +220,7 @@ public class UsersResource {
     	URI location = null;
     	try {
         	Run.saveRun(nRun);
-    		location = new URI(uriInfo.getAbsolutePath().toString()+nRun.getId());
+    		location = new URI(uriInfo.getAbsolutePath().toString()+"/"+nRun.getId());
     	} catch (Exception e){
     		bResp.setError(e.getMessage());
     		return Response.status(404).entity(bResp).build();
