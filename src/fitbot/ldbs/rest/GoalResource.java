@@ -50,7 +50,7 @@ public class GoalResource {
     	GoalTypeResponse gtResp = new GoalTypeResponse();
     	Response res;
     	if(gt == null){
-    		gtResp.setMessage("Incorrect goal type name.");
+    		gtResp.setError("Incorrect goal type name.");
     		res = Response.status(404).entity(gtResp).build();
     		return res;
     	}

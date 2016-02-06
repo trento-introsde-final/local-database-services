@@ -65,7 +65,7 @@ public class UsersResource {
     	URI location = null;
     	Person p = user.toPerson();
     	if(p.getSlack_user_id() == null){
-    		bResp.setMessage("Must provide at least slack_user_id");
+    		bResp.setError("Must provide at least slack_user_id");
     		return Response.status(400).entity(bResp).build();
     	}
     	try {
@@ -89,7 +89,7 @@ public class UsersResource {
     	BasicResponse bResp = new BasicResponse();
     	Person p = Person.getPersonById(userId);
     	if(p == null){
-    		bResp.setMessage("Unknown user id.");
+    		bResp.setError("Unknown user id.");
     		return Response.status(404).entity(bResp).build();
     	}
     	Person newPerson = user.toPerson();
@@ -97,7 +97,7 @@ public class UsersResource {
     	try{
     		Person.updatePerson(newPerson);
     	} catch (Exception e){
-    		bResp.setMessage("Error saving user. "+e.getMessage());
+    		bResp.setError("Error saving user. "+e.getMessage());
     		return Response.status(500).entity(bResp).build();
     	}
     	res = Response.ok(bResp).build();
@@ -126,7 +126,7 @@ public class UsersResource {
     		if(gType == null){
     			error += "Incorrect goal type.";
     		}
-    		bResp.setMessage(error);
+    		bResp.setError(error);
     		return Response.status(404).entity(bResp).build();
     	}
     	
@@ -136,7 +136,7 @@ public class UsersResource {
         	g.setGoalType(gType);
     		p.setUserGoal(g);
     	} catch (Exception e){
-    		bResp.setMessage(e.getMessage());
+    		bResp.setError(e.getMessage());
     		return Response.status(500).entity(bResp).build();
     	}
     	return Response.ok(bResp).build();
@@ -150,7 +150,7 @@ public class UsersResource {
     	GoalsResponse gResp = new GoalsResponse();
     	Person p = Person.getPersonById(userId);
     	if(p == null){
-    		gResp.setMessage("Incorrect user id.");
+    		gResp.setError("Incorrect user id.");
     		res = Response.status(404).entity(gResp).build();
     		return res;
     	}
@@ -175,7 +175,7 @@ public class UsersResource {
         
     	//person doesn't exist
     	if(p==null){
-    		rResp.setMessage("Incorrect user id.");
+    		rResp.setError("Incorrect user id.");
     		return Response.status(404).entity(rResp).build();
     	}
     	
@@ -184,7 +184,7 @@ public class UsersResource {
     	try {
     		runs = p.getRecentRuns(t);
     	} catch(Exception e){
-    		rResp.setMessage(e.getMessage());
+    		rResp.setError(e.getMessage());
     		return Response.status(404).entity(rResp).build();
     	}
    
@@ -204,13 +204,13 @@ public class UsersResource {
     	//Validate user exists
     	Person p = Person.getPersonById(userId);
     	if(p == null){
-    		bResp.setMessage("Incorrect user id.");
+    		bResp.setError("Incorrect user id.");
     		return Response.status(404).entity(bResp).build();
     	}
     	
     	//Validate run parameters
     	if(iRun.getStart_date() == null){
-    		bResp.setMessage("Must provide a start_date for the run.");
+    		bResp.setError("Must provide a start_date for the run.");
     		return Response.status(400).entity(bResp).build();
     	}
     	    	
@@ -222,7 +222,7 @@ public class UsersResource {
         	Run.saveRun(nRun);
     		location = new URI(uriInfo.getAbsolutePath().toString()+nRun.getId());
     	} catch (Exception e){
-    		bResp.setMessage(e.getMessage());
+    		bResp.setError(e.getMessage());
     		return Response.status(404).entity(bResp).build();
     	}
     	res = Response.created(location).entity(nRun).build();

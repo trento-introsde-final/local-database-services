@@ -23,7 +23,7 @@ public class BasicResponse {
 		return status;
 	}
 
-	public String getMessage() {
+	public String getError() {
 		return error;
 	}
 
@@ -31,7 +31,7 @@ public class BasicResponse {
 		this.status = status;
 	}
 
-	public void setMessage(String message) {
+	public void setError(String message) {
 		this.status = "ERROR";
 		this.error = message;
 	}
