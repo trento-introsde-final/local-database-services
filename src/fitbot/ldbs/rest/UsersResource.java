@@ -76,7 +76,7 @@ public class UsersResource {
     		res = Response.serverError().entity(bResp).build();
     		return res;
     	}
-    	res = Response.created(location).build();
+    	res = Response.created(location).entity(bResp).build();
 		return res;
     }
 
