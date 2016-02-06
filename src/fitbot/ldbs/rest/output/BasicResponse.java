@@ -8,7 +8,7 @@ public class BasicResponse {
 	private String status;
 	
 	@JsonInclude(Include.NON_NULL)
-	private String message = null;
+	private String error = null;
 	
 	public BasicResponse(){
 		this.status = "OK";
@@ -16,7 +16,7 @@ public class BasicResponse {
 	
 	public BasicResponse(String message){
 		this.status = "ERROR";
-		this.message = message;
+		this.error = message;
 	}
 
 	public String getStatus() {
@@ -24,7 +24,7 @@ public class BasicResponse {
 	}
 
 	public String getMessage() {
-		return message;
+		return error;
 	}
 
 	public void setStatus(String status) {
@@ -33,7 +33,7 @@ public class BasicResponse {
 
 	public void setMessage(String message) {
 		this.status = "ERROR";
-		this.message = message;
+		this.error = message;
 	}
 
 }
