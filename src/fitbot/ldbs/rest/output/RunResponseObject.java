@@ -22,6 +22,8 @@ public class RunResponseObject {
 	
 	private Float avg_speed;
 	
+	private Integer steps;
+	
 	public RunResponseObject(){
 		
 	}
@@ -57,6 +59,10 @@ public class RunResponseObject {
 	public Float getAvg_speed() {
 		return avg_speed;
 	}
+	
+	public Integer getSteps(){
+		return steps;
+	}
 
 	public void setId(int id) {
 		this.id = id;
@@ -90,6 +96,10 @@ public class RunResponseObject {
 		this.avg_speed = avg_speed;
 	}
 	
+	public void setSteps(Integer steps){
+		this.steps = steps;
+	}
+	
 	public static RunResponseObject convert(Run r){
 		RunResponseObject runRes = new RunResponseObject();
 		runRes.setId(r.getId());
@@ -100,6 +110,7 @@ public class RunResponseObject {
 		runRes.setAvg_speed(r.getAvgSpeed());
 		runRes.setMax_speed(r.getMaxSpeed());
 		runRes.setElevation_gain(r.getElevationGain());
+		runRes.setSteps(r.getSteps());
 		return runRes;
 	}
 	
